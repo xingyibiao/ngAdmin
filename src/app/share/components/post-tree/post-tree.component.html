@@ -1,0 +1,5 @@
+<nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="change($event)">
+  <div *ngFor="let post of posts">
+    <label nz-checkbox [nzValue]="post.postCode" [ngModel]="post.checked">{{post.postName}}</label>
+  </div>
+</nz-checkbox-wrapper>

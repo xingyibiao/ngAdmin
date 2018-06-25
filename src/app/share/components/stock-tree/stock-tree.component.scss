@@ -1,0 +1,36 @@
+ .totip--header{
+    width: 280px;
+    margin-bottom: 10px;
+    input{
+      width: 220px;
+    }
+    button{
+      font-size: 14px;
+      padding: 6px 14px;
+      color: #fff;
+      border-radius: 3px;
+      background-color:  #1164c8;
+    }
+}
+.totip--content{
+    width: 283px;
+    height: 229px;
+    overflow: auto;
+    .warehouse{
+    margin: 0 auto;
+}
+.warehouse--item{
+    height: 35px;
+    line-height: 35px;
+    label{
+        display: block;
+    }
+ }
+}
+.toptip--footer{
+    text-align: center;
+}
+
+:host ::ng-deep .ant-radio-wrapper{
+    display: block;
+  } 

@@ -1,0 +1,13 @@
+<nz-popover [nzPlacement]="'bottom'" nzTrigger="click">
+  <input type="text" nz-input readonly class="categoryName" [(ngModel)]="categoryName" nz-popover>
+  <ng-template #nzTemplate>
+    <div class="tree">
+      <nz-tree
+        [(ngModel)]="nodes"
+        [nzCheckable]="true"
+        (nzExpandChange)="mouseAction('expand', $event)"
+        (nzCheckBoxChange)="checked($event)">
+      </nz-tree>
+    </div>
+</ng-template>
+</nz-popover>

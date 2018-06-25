@@ -1,0 +1,22 @@
+@import '../../../../utils/var.scss';
+.myPost--header{
+  padding: 13px 0 0 0;
+  border-bottom: 1px solid #ebeef5;
+  padding-bottom: 8px;
+  b{
+      font-size: 16px;
+  }
+}
+.myPost--content{
+  padding-bottom: 40px;
+  padding-top: 10px;
+  b{
+    font-size: 16px;
+  }
+  span{
+    display: inline-block;
+    width: 400px;
+    line-height: 48px;
+    height: 48px;
+  }
+}

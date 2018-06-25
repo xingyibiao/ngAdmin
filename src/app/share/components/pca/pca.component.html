@@ -1,0 +1,15 @@
+<div class="pca">
+    <nz-select style="width: 120px;" [(ngModel)]="province" (ngModelChange)="getCity(province,true)">
+        <nz-option *ngFor="let item of provinces" [nzValue]="item.code" [nzLabel]="item.name">
+        </nz-option>
+    </nz-select>
+    <span class="title"> 省/市 </span>
+    <nz-select style="width: 120px;" [(ngModel)]="city" (ngModelChange)="getArea(city,true)">
+        <nz-option *ngFor="let item of citys" [nzValue]="item.code" [nzLabel]="item.name"></nz-option>
+    </nz-select>
+    <span class="title"> 市 </span>
+    <nz-select style="width: 120px;" [(ngModel)]="area" (ngModelChange)="emitPca(area)">
+        <nz-option *ngFor="let item of areas" [nzValue]="item.code" [nzLabel]="item.name"></nz-option>
+    </nz-select>
+    <span class="title"> 区/县 </span>
+</div>

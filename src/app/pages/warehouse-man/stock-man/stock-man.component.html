@@ -1,0 +1,114 @@
+<div class="container">
+    <!-- 页头搜索开始 -->
+    <div class="header">
+        <form nz-form [formGroup]="stockForm">
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzSpan]="4">
+                    <nz-form-item nzFlex>
+                        <nz-form-label>货品编号</nz-form-label>
+                        <nz-form-control>
+                            <input nz-input type="text" formControlName="productCode" class="searchTxt">
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="5">
+                    <nz-form-item nzFlex>
+                        <nz-form-label>仓库 </nz-form-label>
+                        <nz-form-control>
+                            <nz-input-group [nzSuffix]="stockNameTempalte">
+                                <input nz-input type="text" formControlName="warehouseName" class="searchTxt">
+                            </nz-input-group>
+                            <ng-template #stockNameTempalte>
+                                <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="isVisibleStock">
+                                    <i nz-popconfirm class="anticon anticon-setting"></i>
+                                    <ng-template #nzTemplate>
+                                        <div class="totip">
+                                            <app-stock-tree (hanldeStockChange)="stockChange($event)"></app-stock-tree>
+                                            <div class="totip--footer">
+                                                <button type="button" class="cancel" (click)="this.isVisibleStock = false">取消</button>
+                                                <button type="button" class="confirm" (click)="saveStockName()">确定</button>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </nz-popconfirm>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <nz-form-item nzFlex>
+                        <nz-form-label>入库时间</nz-form-label>
+                        <nz-form-control>
+                            <nz-range-picker formControlName="time" (ngModelChange)="handleDateChange($event)" nzShowToday></nz-range-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="4">
+                    <nz-form-item nzFlex>
+                        <nz-form-label>货品类型</nz-form-label>
+                        <nz-form-control>
+                            <app-product-tree (checkedChange)="checkedChange($event)"></app-product-tree>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzSpan]="3">
+                    <nz-form-item>
+                        <nz-form-control>
+                           <button nz-button class="serchBtn" (click)="search()">搜索</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 页头搜索结束 -->
+    <div class="content">
+        <nz-table #nzTable [nzData]="stockManList" [nzShowPagination]="false" [nzScroll]="{x:'950px'}">
+            <thead>
+                <tr>
+                    <th>货品编号</th>
+                    <th>货品名称</th>
+                    <th>货品类别</th>
+                    <th>规格</th>
+                    <th>成本均价</th>
+                    <th>库存量</th>
+                    <th>单位</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let da of nzTable.data">
+                    <td>{{da.productCode}}</td>
+                    <td>{{da.productName}}</td>
+                    <td>{{da.productType}}</td>
+                    <td>{{da.productSpec}}</td>
+                    <td>{{da.costAveragePrice}}</td>
+                    <td>{{da.stock}}</td>
+                    <td>{{da.unit}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <!-- 页脚开始 -->
+    <div class="footer">
+        <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+        <ng-template #totalTemplate let-total>
+            共 {{total}} 条
+        </ng-template>
+
+        <div class="operationBtnGroup">
+            <button class="operationBtn" (click)="storage()">入库操作</button>
+            <button class="operationBtn" (click)="outBound()">出库操作</button>
+        </div>
+        <!-- 入库操作-->
+        <nz-modal nzWrapClassName="vertical-left-modal" [(nzVisible)]="isShowStorage" [nzTitle]="flag?'入库':'出库'" [nzWidth]="1200"
+            [nzFooter]="null">
+            <app-storage-component [flag]="flag" (handleStorage)="handleStorage($event)" (handleStorageInfo)="handleStorageInfo($event)"></app-storage-component>
+        </nz-modal>
+        <!-- 入库操作结束-->
+    </div>
+    <!-- 页脚结束 -->

@@ -1,0 +1,8 @@
+<div class="myDepartment--header">
+
+  <p>{{myDepart.officeName}}</p>
+  <p class="employ">所属员工</p>
+</div>
+<div class="myDepartment--content">
+  <span *ngFor="let emp of myDepart.empAndPostList">{{emp}}</span>
+</div>

@@ -1,0 +1,186 @@
+<!-- 搜索开始 -->
+<div class="mangerUser--header">
+  <label>
+    组织名称：<input nz-input placeholder="人员姓名或者账号" [(ngModel)]="nameorlogin" class="nameorlogin">
+  </label>
+  <label>
+    在职状态：
+    <nz-select style="width: 120px;" [(ngModel)]="status" nzPlaceholder="请选择状态">
+      <nz-option [nzValue]="0" nzLabel="正常"></nz-option>
+      <nz-option [nzValue]="2" nzLabel="离职"></nz-option>
+      <nz-option [nzValue]="3" nzLabel="冻结"></nz-option>
+    </nz-select>
+  </label>
+  <button class="search" (click)="search()">搜索</button>
+</div>
+<!-- 搜索结束 -->
+
+<!-- 组织表格开始 -->
+<div class="mangerUser--content">
+  <nz-table #nzTable [nzData]="users" [nzShowPagination]="false" [nzPageSize]="10" [nzScroll]="{x:'1300px'}">
+    <thead>
+      <tr>
+        <th>登录账号</th>
+        <th>员工姓名</th>
+        <th>岗位</th>
+        <th nzWidth="108px" nzRight="0px">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of nzTable.data">
+        <td>{{user.logincode}}</td>
+        <td>{{user.empname}}</td>
+        <td>
+          <ng-container *ngFor="let post of user.postnames">{{post.postname}}</ng-container>
+        </td>
+        <td nzWidth="108px" nzRight="0px">
+          <span class="blue" (click)="selectUser(user.usercode)" *appAuthDirective="'yggl:edit'">编辑</span>
+          <span class="error" (click)="delUser(user.usercode)" *appAuthDirective="'yggl:del'">删除</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<!-- 组织表格结束 -->
+
+<!-- 页脚开始 -->
+<div class="mangerUser--footer">
+  <nz-pagination
+    [nzPageIndex]="pageNo"
+    [nzTotal]="total"
+    [nzPageSize]="10"
+    [nzShowTotal]="totalTemplate"
+    (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+  <ng-template #totalTemplate let-total>
+    共 {{total}} 条
+  </ng-template>
+  <button
+    (click)="selectUser()"
+    *appAuthDirective="'yggl:add'">新增员工</button>
+</div>
+<!-- 页脚结束 -->
+
+<!-- 编辑、新增模态框开始 -->
+<nz-modal
+  [(nzVisible)]="showEditor"
+  nzTitle="编辑信息"
+  (nzOnOk)="save()"
+  (nzOnCancel)="cancel()"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  [nzWidth]="900">
+  <ng-template #modalContent>
+    <form nz-form [formGroup]="userForm" (ngSubmit)="save()" class="userForm">
+      <nz-form-item class="userForm--item">
+        <nz-form-label [nzSpan]="6" nzFor="logincode" nzRequired>登录账号：</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="logincode" type="text" id="logincode" formControlName="logincode">
+          <nz-form-explain *ngIf="userForm.get('logincode').dirty && userForm.get('logincode').errors">请输入登录账号</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="userForm--item">
+        <nz-form-label [nzSpan]="6" nzFor="officeName" nzRequired>所属公司/部门：</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-input-group [nzSuffix]="fullNameTemplate">
+            <input nz-input name="officeName" type="text" id="officeName" formControlName="officename" readonly>
+          </nz-input-group>
+          <nz-form-explain *ngIf="userForm.get('officecode').dirty && userForm.get('officecode').errors">请选择所属公司/部门</nz-form-explain>
+          <ng-template #fullNameTemplate>
+            <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="showOffices" >
+              <i nz-popconfirm class="anticon anticon-setting" ></i>
+              <ng-template #nzTemplate>
+                <div class="totip" >
+                  <div class="totip--header">
+                    <input type="text" nz-input placeholder="公司或部门名称" [(ngModel)]="modelOfficeName" [ngModelOptions]="{ standalone: true }">
+                    <button (click)="getCompanyDepart()">搜索</button>
+                  </div>
+                  <div class="totip--content">
+                    <app-office-tree [officeName]="cacheOfficeName" [checkeds]="[userForm.get('officecode').value]" (checkedChange)="officeChange($event)"></app-office-tree>
+                  </div>
+                  <div class="totip--footer">
+                    <button type="button" class="cancel" (click)="cancelTotip('showFullName')">取消</button>
+                    <button type="button" class="confirm" (click)="saveOffice()">确定</button>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-popconfirm>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="userForm--item">
+        <nz-form-label [nzSpan]="6" nzFor="syspostcode">设置岗位：</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-input-group [nzSuffix]="leaderTemplate">
+            <input nz-input name="syspostcode" type="text" id="syspostcode" formControlName="postname" readonly>
+          </nz-input-group>
+          <ng-template #leaderTemplate>
+            <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="showPost">
+              <i nz-popconfirm class="anticon anticon-setting"></i>
+              <ng-template #nzTemplate>
+                <div class="totip">
+                  <div class="totip--header">
+                    <input type="text" nz-input placeholder="岗位名称" [(ngModel)]="postName" [ngModelOptions]="{ standalone: true }">
+                    <button>搜索</button>
+                  </div>
+                  <div class="totip--content">
+                    <app-post-tree [postName]="cachePostName" (checkedChange)="postChange($event)"></app-post-tree>
+                  </div>
+                  <div class="totip--footer">
+                    <button type="button" class="cancel" (click)="cancelTotip('showLeader')">取消</button>
+                    <button type="button" class="confirm" (click)="savePostCode()">确定</button>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-popconfirm>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="userForm--item">
+        <nz-form-label [nzSpan]="6" nzFor="username" nzRequired>员工姓名：</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-input-group>
+            <input nz-input name="username" type="text" id="username" formControlName="username">
+            <nz-form-explain *ngIf="userForm.get('username').dirty && userForm.get('username').errors">请输入员工姓名</nz-form-explain>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="userForm--item">
+        <nz-form-label [nzSpan]="6" nzFor="status" nzRequired>在岗/离职：</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select  nzPlaceholder="员工状态" formControlName="status">
+            <nz-option nzValue="0" nzLabel="正常"></nz-option>
+            <nz-option nzValue="2" nzLabel="离职"></nz-option>
+            <nz-option nzValue="3" nzLabel="冻结"></nz-option>
+          </nz-select>
+          <!-- <nz-input-group [nzSuffix]="typeTemplate">
+            <input nz-input name="status" type="text" id="status" readonly formControlName="status">
+          </nz-input-group>
+          <ng-template #typeTemplate> -->
+            <!-- <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="showType">
+              <i nz-popconfirm class="anticon anticon-setting" ></i>
+              <ng-template #nzTemplate>
+                <div class="totip">
+                  <div class="totip--content">
+                    <nz-radio-group formControlName="officeType">
+                      <label nz-radio nzValue="1" class="totip--content__item">公司</label>
+                      <label nz-radio nzValue="2" class="totip--content__item">子公司</label>
+                      <label nz-radio nzValue="3" class="totip--content__item">部门</label>
+                    </nz-radio-group>
+                  </div>
+                  <div class="totip--footer">
+                    <button type="button" class="cancel" (click)="cancelTotip('showType')">取消</button>
+                    <button type="button" class="confirm" (click)="saveOfficeType()">确定</button>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-popconfirm> -->
+          <!-- </ng-template> -->
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button (click)="save()" class="save">确定</button>
+  </ng-template>
+</nz-modal>
+<!-- 编辑、新增模态框结束 -->

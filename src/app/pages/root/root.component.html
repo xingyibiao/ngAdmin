@@ -1,0 +1,24 @@
+<div class="container">
+  <app-header [userInfo]="userInfo"></app-header>
+  <app-left-menu [menus]="menus" (changeCollapsed)="changeCollapsed($event)"></app-left-menu>
+  <div class="main" [style.left]="isCollapsed ? '80px' : '240px'">
+    <!-- 标签开始 -->
+    <div class="main--header">
+      <div class="tab-container">
+        <ul class="tabs clearfix" >
+          <li *ngFor="let item of mainItems" [routerLink]="['/' + item.module]" [class.active]="item.isSelect">
+            <a [routerLink]="['/' + item.module]">{{item.title}}</a>
+            <i class="anticon anticon-close-circle" (click)="closeUrl(item.module, item.isSelect)"></i>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 标签结束 -->
+
+    <!-- 工作区开始 -->
+    <div class="main--content">
+      <router-outlet></router-outlet>
+    </div>
+    <!-- 工作区结束 -->
+  </div>
+</div>

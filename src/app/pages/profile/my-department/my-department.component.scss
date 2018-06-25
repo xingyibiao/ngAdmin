@@ -1,0 +1,25 @@
+@import '../../../../utils/var.scss';
+.myDepartment--header{
+  padding: 13px 0 0 0;
+  p{
+    font-size:16px;
+    color:#1164c8;
+  }
+  p.employ{
+    font-family:MicrosoftYaHeiUI;
+    font-size:14px;
+    color:#999999;
+    padding-bottom: 6px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid #ebeef5;
+  }
+}
+.myDepartment--content{
+  padding-bottom: 40px;
+  span{
+    display: inline-block;
+    width: 400px;
+    line-height: 48px;
+    height: 48px;
+  }
+}

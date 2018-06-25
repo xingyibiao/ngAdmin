@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "http://erp.sceo360.com",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": "/api"
+    }
+  }
+}

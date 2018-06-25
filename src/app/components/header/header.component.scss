@@ -1,0 +1,79 @@
+@import '../../../utils/var.scss';
+.header{
+  height: 60px;
+  background-color: $blue;
+  font-size: 0;
+  &>div{
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .header--logo{
+    position: relative;
+    padding-left: 70px;
+    cursor: pointer;
+    z-index: 3;
+  }
+  .header--content{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-left: -170px;
+    margin-right: -340px;
+    z-index: 0;
+    .header--content__item{
+      display: inline-block;
+      margin: 0 20px;
+      height: 60px;
+      line-height: 60px;
+      a{
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+      }
+      &.active:after{
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        margin-top: -16px;
+        margin-left: 26px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 10px solid #fff;
+      }
+    }
+  }
+  .header--msgBox{
+    float: right;
+    position: relative;
+    font-size: 14px;
+    margin-top: 17px;
+    z-index: 3;
+    .header--msgBox__item{
+      display: inline-block;
+      position: relative;
+      color: #fff;
+      span{
+        margin: 0 30px 0 7px;
+      }
+      .userInfo--seletct{
+        position: absolute;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px 0;
+        p{
+          width: 134px;
+          height: 30px;
+          margin: 0;
+          color: $black;
+          text-align: center;
+          line-height: 30px;
+          &:hover{
+            background-color: $blue;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}

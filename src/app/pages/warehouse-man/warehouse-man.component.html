@@ -1,0 +1,125 @@
+<div class="container">
+    <!-- 页头搜索开始 -->
+    <div class="header">
+        仓库名称:
+        <input nz-input placeholder="" [(ngModel)]="warehouseName" class="searchTxt">
+        <button type="button" class="blue" (click)="search()" class="serchBtn">搜索</button>
+    </div>
+</div>
+<!-- 页头搜索结束 -->
+<div class="content">
+    <nz-table #nzTable [nzData]="warehouseList" [nzShowPagination]="false" [nzScroll]="{x:'950px'}">
+        <thead>
+            <tr>
+                <th>仓库名称</th>
+                <th>联系人</th>
+                <th>联系电话</th>
+                <th>仓库地址</th>
+                <th nzWidth="100px" nzRight="0px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let da of nzTable.data">
+                <td>{{da.warehouseName}}</td>
+                <td>{{da.personCharge}}</td>
+                <td>{{da.personTel}}</td>
+                <td>{{da.warehouseAdress}}</td>
+                <td nzRight="0px" nzWidth="100px">
+                    <span class="edit" (click)="editWarehouse(da.id)">编辑</span>
+                    <span class="del" (click)="delWarehouse(da.id)">删除</span>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+<!-- 页脚开始 -->
+<div class="footer">
+    <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+    <ng-template #totalTemplate let-total>
+        共 {{total}} 条
+    </ng-template>
+    <button class="addBtn" (click)="editWarehouse()">新增仓库</button>
+
+    <nz-modal nzWrapClassName="vertical-left-modal" [(nzVisible)]="isVisibleMiddle" nzTitle="编辑仓库信息" (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" [nzWidth]="900">
+        <form nz-form [formGroup]="validateForm">
+
+            <nz-form-item>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input type="hidden" formControlName="flag" id="flag">
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input type="hidden" formControlName="warehostLocation" id="warehostLocation">
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input type="hidden" formControlName="id" id="id">
+                </nz-form-control>
+            </nz-form-item>
+
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="warehouseName">仓库名称</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input type="text" formControlName="warehouseName" id="warehouseName">
+                    <nz-form-explain *ngIf="validateForm.get('warehouseName').dirty && validateForm.get('warehouseName').errors">仓库名称为必填</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="personCharge" nzRequired>联系人</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input type="personCharge" id="personCharge" formControlName="personCharge">
+                    <nz-form-explain *ngIf="validateForm.get('personCharge').dirty && validateForm.get('personCharge').errors">请输入联系人</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="personTel" nzRequired>联系电话</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input type="text" formControlName="personTel" id="personTel">
+                    <nz-form-explain *ngIf="validateForm.get('personTel').dirty && validateForm.get('personTel').errors">
+                        请输入联系电话
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="warehostLocationCode" nzRequired>仓库所在地</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" size="small">
+                    <app-pca [pca]="validateForm.get('warehostLocationCode').value" (handleChange)="pcaChange($event)" [size]="small"></app-pca>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="warehouseAdress" nzRequired>仓库地址</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input id="warehouseAdress" formControlName="warehouseAdress">
+                    <nz-form-explain *ngIf="validateForm.get('warehouseAdress').dirty && validateForm.get('warehouseAdress').errors">请输入仓库地址</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="warehouseCapacity" nzRequired>仓库容量</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input id="warehouseCapacity" formControlName="warehouseCapacity">
+                    <nz-form-explain *ngIf="validateForm.get('warehouseCapacity').dirty && validateForm.get('warehouseCapacity').errors">请输入仓库容量</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="warehouseDefault">是否默认</nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <label nz-checkbox formControlName="warehouseDefault" [(ngModel)]="checkbox">
+                 默认仓库
+              </label>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+</div>
+<!-- 页脚结束 -->

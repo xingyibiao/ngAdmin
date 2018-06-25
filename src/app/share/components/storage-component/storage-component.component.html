@@ -1,0 +1,468 @@
+<!-- 入库操作-->
+<div class="storageOutbound">
+    <form nz-form [formGroup]="storageForm" *ngIf="flag">
+        <div class="storageOutbound--title">货品单号 </div>
+        <nz-form-item>
+            <nz-form-label [nzSm]="1" nzFor="inventoryCode">单号</nz-form-label>
+            <nz-form-control [nzSm]="8">
+                <input nz-input type="text" formControlName="inventoryCode" id="inventoryCode" class="searchTxt">
+            </nz-form-control>
+        </nz-form-item>
+
+        <div class="storageOutbound--title">填写信息</div>
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="supplierName">供应商名称</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" formControlName="supplierName" id="supplierName" class="searchTxt">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <input nz-input type="hidden" formControlName="warehouseId" id="warehouseId" class="searchTxt">
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="warehouseName">
+                        <span *ngIf="flag">入库仓库</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <nz-input-group [nzSuffix]="stockNameTempaltes">
+                            <input nz-input type="text" formControlName="warehouseName" class="searchTxt">
+                        </nz-input-group>
+                        <ng-template #stockNameTempaltes>
+                            <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="isVisibleStocks">
+                                <i nz-popconfirm class="anticon anticon-setting"></i>
+                                <ng-template #nzTemplate>
+                                    <div class="totip">
+                                        <app-stock-tree (hanldeStockChange)="stockChange($event)"></app-stock-tree>
+                                        <div class="totip--footer">
+                                            <button type="button" class="cancel" (click)="this.isVisibleStocks = false">取消</button>
+                                            <button type="button" class="confirm" (click)="saveStockNames()">确定</button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </nz-popconfirm>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="type">类型</nz-form-label>
+                    <nz-form-control>
+                        <nz-select formControlName="type" (ngModelChange)="handleOutBoundType($event)">
+                            <nz-option *ngFor="let option of listStorageType" [nzLabel]="option.name" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="5">
+                <nz-form-item>
+                    <nz-form-label nzFor="time" nzRequired>
+                        <span *ngIf="flag">入库时间</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <nz-date-picker formControlName="time" (ngModelChange)="handleStorageDateChange($event)" nzShowTime></nz-date-picker>
+                        <!-- <input nz-input type="storageTime" id="storageTime" formControlName="storageTime"> -->
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzFor="storageAmount" nzRequired>
+                        <span *ngIf="flag">入库金额</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" formControlName="storageAmount" id="storageAmount">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzFor="operator" nzRequired>经办人</nz-form-label>
+                    <nz-form-control size="small">
+                        <input nz-input type="text" formControlName="operator" id="operator">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="orderNumber" nzRequired>订单号</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input id="orderNumber" formControlName="orderNumber">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="remark">备注</nz-form-label>
+                    <nz-form-control>
+                        <textarea nz-input [nzAutosize]="{minRows: 2, maxRows: 4}" formControlName="remark" id="remark"></textarea>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+    <!--入库操作结束-->
+
+    <!--出库操作-->
+    <form nz-form [formGroup]="outBoundForm" *ngIf="flag == 0">
+        <div class="storageOutbound--title">货品单号 </div>
+        <nz-form-item>
+            <nz-form-label [nzSm]="1" nzFor="inventoryCode">单号</nz-form-label>
+            <nz-form-control [nzSm]="8">
+                <input nz-input type="text" formControlName="inventoryCode" id="inventoryCode" class="searchTxt">
+            </nz-form-control>
+        </nz-form-item>
+
+        <div class="storageOutbound--title">填写信息</div>
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="customer">客户</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" formControlName="customer" id="customer" class="searchTxt">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <input nz-input type="hidden" formControlName="warehouseId" id="warehouseId" class="searchTxt">
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="warehouseName">
+                        <span *ngIf="flag == 0">出库仓库</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <nz-input-group [nzSuffix]="stockNameTempaltes">
+                            <input nz-input type="text" formControlName="warehouseName" class="searchTxt">
+                        </nz-input-group>
+                        <ng-template #stockNameTempaltes>
+                            <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="isVisibleStocks">
+                                <i nz-popconfirm class="anticon anticon-setting"></i>
+                                <ng-template #nzTemplate>
+                                    <div class="totip">
+                                        <app-stock-tree (hanldeStockChange)="stockChange($event)"></app-stock-tree>
+                                        <div class="totip--footer">
+                                            <button type="button" class="cancel" (click)="this.isVisibleStocks = false">取消</button>
+                                            <button type="button" class="confirm" (click)="saveOutStockNames()">确定</button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </nz-popconfirm>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="type">类型</nz-form-label>
+                    <nz-form-control>
+                        <nz-select formControlName="type" (ngModelChange)="handleOutBoundType($event)">
+                            <nz-option *ngFor="let option of listOutBoundType" [nzLabel]="option.name" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzFor="time" nzRequired>
+                        <span *ngIf="flag == 0">出库时间</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <nz-date-picker formControlName="time" (ngModelChange)="handleStorageDateChange($event)" nzShowTime></nz-date-picker>
+                        <!-- <input nz-input type="storageTime" id="storageTime" formControlName="storageTime"> -->
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzFor="outageAmount" nzRequired>
+                        <span *ngIf="flag == 0">出库金额</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" formControlName="outageAmount" id="outageAmount">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="4">
+                <nz-form-item>
+                    <nz-form-label nzFor="operator" nzRequired>经办人</nz-form-label>
+                    <nz-form-control size="small">
+                        <input nz-input type="text" formControlName="operator" id="operator">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="orderNumber" nzRequired>订单号</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input id="orderNumber" formControlName="orderNumber">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="6">
+                <nz-form-item>
+                    <nz-form-label nzFor="remark">备注</nz-form-label>
+                    <nz-form-control>
+                        <textarea nz-input [nzAutosize]="{minRows: 2, maxRows: 4}" formControlName="remark" id="remark"></textarea>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+
+    <!--出库操作结束-->
+    <div class="storageOutbound--title">表单信息</div>
+    <div class="storageOutbound--content">
+        <nz-table #nzTables [nzData]="stockManInfoList" [nzShowPagination]="false" [nzScroll]="{x:'950px'}">
+            <thead>
+                <tr>
+                    <th>货品名称</th>
+                    <th>计量单位</th>
+                    <th>货品类别</th>
+                    <th>规格</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>总金额</th>
+                    <th nzWidth="100px" nzRight="0px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let da of nzTables.data">
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.productName}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.productName">
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.unit}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.unit">
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.productType}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.productType">
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.productSpec}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.productSpec">
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.unitPrice}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.unitPrice">
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.stock}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.stock">
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            {{da.productTotalAmount}}
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <input type="text" nz-input [(ngModel)]="editCache[da.id].dataSoruce.productTotalAmount">
+                        </ng-container>
+                    </td>
+                    <td nzRight="0px" nzWidth="100px">
+                        <ng-container *ngIf="!editCache[da.id].edit">
+                            <span class="edit" (click)="startEdit(da.id)">编辑</span>
+                        </ng-container>
+                        <ng-container *ngIf="editCache[da.id].edit">
+                            <span class="edit" (click)="saveEdit(da.id)">保存</span>
+                            <nz-popconfirm [nzTitle]="'确定取消?'" (nzOnConfirm)="cancelEdit(da.id)">
+                                <a nz-popconfirm>取消</a>
+                            </nz-popconfirm>
+                        </ng-container>
+
+                        <nz-popconfirm [nzTitle]="'确定取消?'" (nzOnConfirm)="delStorage(da.id)">
+                            <span nz-popconfirm class="del">删除</span>
+                        </nz-popconfirm>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="storageOutbound--footer ">
+        <!-- 添加已有货品-->
+        <button type="button " (click)="showAddPro()">
+            <i class="anticon anticon-plus "></i>添加已有货品
+        </button>
+        <nz-modal nzWrapClassName="vertical-left-modal " [(nzVisible)]="isShowAddPro " nzTitle="添加已有货品 " (nzOnCancel)=" this.isShowAddPro = false "
+            (nzOnOk)="saveAddPro() " [nzWidth]="900 " class="storageOutbound ">
+            <div class="title ">
+                <form nz-form [nzLayout]="'inline'" [formGroup]="stockForm">
+                    <nz-form-item>
+                        <nz-form-label>产品名称 </nz-form-label>
+                        <nz-form-control>
+                            <input nz-input placeholder=" " formControlName="productName" class="searchTxt">
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item *ngIf="flag == 0">
+                        <nz-form-label nzFor="warehouseName">选择仓库</nz-form-label>
+                        <nz-form-control>
+                            <nz-input-group [nzSuffix]="stockNameTempaltess">
+                                <input nz-input type="text" formControlName="warehouseName" class="searchTxt">
+                            </nz-input-group>
+                            <ng-template #stockNameTempaltess>
+                                <nz-popconfirm [nzPlacement]="'bottomRight'" [(nzVisible)]="isVisibleOutStock">
+                                    <i nz-popconfirm class="anticon anticon-setting"></i>
+                                    <ng-template #nzTemplate>
+                                        <div class="totip">
+                                            <app-stock-tree (hanldeStockChange)="stockChange($event)"></app-stock-tree>
+                                            <div class="totip--footer">
+                                                <button type="button" class="cancel" (click)="this.isVisibleOutStock = false">取消</button>
+                                                <button type="button" class="confirm" (click)="saveOutStockName()">确定</button>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </nz-popconfirm>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control>
+                            <button nz-button nzType="primary" (click)="search()">搜索</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+            </div>
+            <nz-table #nzTable [nzData]="stockManList" [nzShowPagination]="false " [nzScroll]="{x: '950px'} ">
+                <thead>
+                    <tr>
+                        <th>货品编号</th>
+                        <th>货品名称</th>
+                        <th>单位</th>
+                        <th>货品类型</th>
+                        <th>规格</th>
+                        <th nzWidth="100px " nzRight="0px ">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let da of nzTable.data ">
+                        <td>{{da.productCode}}</td>
+                        <td>{{da.productName}}</td>
+                        <td>{{da.unit}}</td>
+                        <td>{{da.productType}}</td>
+                        <td>{{da.productSpec}}</td>
+                        <td nzRight="0px " nzWidth="100px ">
+                            <nz-radio-group [(ngModel)]="productValue " (ngModelChange)="handleProduct($event) ">
+                                <label nz-radio [nzValue]="da.id "></label>
+                            </nz-radio-group>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+            <div class="footer">
+                <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+                <ng-template #totalTemplate let-total>
+                    共 {{total}} 条
+                </ng-template>
+            </div>
+        </nz-modal>
+        <!-- 添加已有货品结束-->
+
+        <!-- 添加新货品-->
+        <button type="button " *ngIf="flag == 1" (click)="this.isShowAddNewsPro = true ">
+            <i class="anticon anticon-plus "></i>添加新货品</button>
+        <nz-modal nzWrapClassName="vertical-left-modal " [(nzVisible)]="isShowAddNewsPro" nzTitle="添加新货品 " (nzOnCancel)=" this.isShowAddNewsPro = false "
+            (nzOnOk)="saveAddNewsPro() " [nzWidth]="900 " class="storageOutbound ">
+            <form nz-form [formGroup]="addProductForm">
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzRequired nzFor="productCode">货品编号</nz-form-label>
+                    <nz-form-control [nzSm]="10 ">
+                        <input nz-input type="text " formControlName="productCode" id="productCode " class="searchTxt ">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzRequired nzFor="productName">货品名称</nz-form-label>
+                    <nz-form-control [nzSm]="10 ">
+                        <input nz-input type="text " formControlName="productName" id="productName ">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzRequired nzFor="productTypeId">货品分类</nz-form-label>
+                    <nz-form-control [nzSm]="10">
+                        <app-product-tree (checkedChange)="checkedChanges($event)"></app-product-tree>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzFor="productSpec" nzRequired>货品规格</nz-form-label>
+                    <nz-form-control [nzSm]="10 ">
+                        <input nz-input type="text " id="productSpec" formControlName="productSpec">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzFor="unit" nzRequired>计量单位</nz-form-label>
+                    <nz-form-control [nzSm]="10 ">
+                        <input nz-input type="text " formControlName="unit" id="unit ">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzFor="unitPrice" nzRequired>单价</nz-form-label>
+                    <nz-form-control [nzSm]="10 ">
+                        <input nz-input type="text " formControlName="unitPrice" id="unitPrice ">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSm]="4 " nzFor="stock" nzRequired>数量</nz-form-label>
+                    <nz-form-control [nzSm]="10 ">
+                        <input nz-input type="text" formControlName="stock" id="stock ">
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-modal>
+        <!-- 添加新货品结束-->
+    </div>
+    <div class="storageOutbound--btnGroup">
+        <button type="button" (click)="cancelStorageInfo()" class="ant-btn ng-star-inserted">取消</button>
+        <button type="button" (click)="saveStorageInfo()" class="ant-btn ant-btn-primary ng-star-inserted">确定</button>
+    </div>
+</div>

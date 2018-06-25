@@ -1,0 +1,82 @@
+<!-- 搜索开始 -->
+<div class="mangerCompany--header">
+  <label>
+    子公司名称：
+    <input nz-input placeholder="请输入子公司名称" [(ngModel)]="companyName" class="companyName" (keydown.enter)="search()">
+  </label>
+  <button class="search" (click)="search()">搜索</button>
+</div>
+<!-- 搜索结束 -->
+
+<!-- 组织表格开始 -->
+<div class="mangerCompany--content">
+  <nz-table #nzTable [nzData]="mangerCompanyList" [nzShowPagination]="false" [nzPageSize]="10" [nzScroll]="{x:'1300px'}">
+    <thead>
+      <tr>
+        <th>公司名称</th>
+        <th>所属公司</th>
+        <th>添加日期</th>
+        <th nzWidth="108px" nzRight="0px">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let co of nzTable.data">
+        <td>{{co.companyName}}</td>
+        <td>{{co.belongCompanyName}}</td>
+        <td>{{co.createDate}}</td>
+        <td nzWidth="108px" nzRight="0px">  
+          <nz-popconfirm [nzPlacement]="'left'">
+            <span class="blue" nz-popconfirm (click)="addEditCompany(co.companyCode)" *appAuthDirective="'gsgl:edit'">编辑</span>
+            <ng-template #nzTemplate>
+              <div class="totip">
+                <form nz-form [formGroup]="postForm" (ngSubmit)="save()" nzLayout="vertical">
+                  <nz-form-item>
+                    <nz-form-label [nzXs]="24" nzRequired nzFor="companyName">子公司名称</nz-form-label>
+                    <nz-form-control [nzXs]="24">
+                      <input nz-input formControlName="companyName" id="companyName">
+                      <nz-form-explain *ngIf="postForm.get('companyName').dirty && postForm.get('companyName').errors">请输入子公司名称</nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <div class="totipForm--footer">
+                    <button type="reset" class="cancel">取消</button>
+                    <button type="submit" class="confirm">确定</button>
+                  </div>
+                </form>
+              </div>
+            </ng-template>
+          </nz-popconfirm>
+          <span class="error" (click)="delCompany(co.companyCode)" *appAuthDirective="'gsgl:del'">删除</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<!-- 组织表格结束 -->
+
+<!-- 页脚开始 -->
+<div class="mangerCompany--footer">
+  <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+  <ng-template #totalTemplate let-total>
+    共 {{total}} 条
+  </ng-template>
+  <nz-popconfirm [nzPlacement]="'topRight'">
+    <button nz-popconfirm (click)="addEditCompany()" *appAuthDirective="'gsgl:add'">新增子公司名称</button>
+    <ng-template #nzTemplate>
+      <div class="totip">
+        <form nz-form [formGroup]="postForm" (ngSubmit)="save()" nzLayout="vertical">
+          <nz-form-item>
+            <nz-form-label [nzXs]="24" nzRequired nzFor="companyName">子公司名称</nz-form-label>
+            <nz-form-control [nzXs]="24">
+              <input nz-input formControlName="companyName" id="companyName">
+              <nz-form-explain *ngIf="postForm.get('companyName').dirty && postForm.get('companyName').errors">请输入子公司名称</nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <div class="totipForm--footer">
+            <button type="reset" class="cancel">取消</button>
+            <button type="submit" class="confirm">确定</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </nz-popconfirm>
+</div>

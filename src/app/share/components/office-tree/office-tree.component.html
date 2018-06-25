@@ -1,0 +1,8 @@
+<nz-tree
+  [(ngModel)]="nodes"
+  [nzCheckable]="true"
+  [nzCheckStrictly]="true"
+  [nzDefaultCheckedKeys]="checkeds"
+  (nzCheckBoxChange)="treeChange($event)"
+  >
+</nz-tree>

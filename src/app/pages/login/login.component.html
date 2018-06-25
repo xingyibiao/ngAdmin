@@ -1,0 +1,19 @@
+<div class="login">
+  <form (ngSubmit)="login()" [formGroup]="loginForm" class="loginForm">
+    <div class="loginForm--header">
+      <div class="loginForm--header__title">
+        <img src="assets/logoNoText.png" >企业管理
+      </div>
+      <div class="loginForm--header__subTitle">SCEO是千纸鹤最具有影响力的企业数据管理平台</div>
+    </div>
+    <label class="loginForm--item">
+      <span class="title">账号</span>
+      <input type="text" name="username" placeholder="请输入账号" formControlName="username">
+    </label>
+    <label class="loginForm--item">
+      <span class="title">密码</span>
+      <input type="password" name="password" placeholder="请输入密码" formControlName="password" (keyup.enter)="login()">
+    </label>
+    <button type="submit" [disabled]="!loginForm.valid" class="loginSubmit">登录</button>
+  </form>
+</div>

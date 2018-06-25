@@ -1,0 +1,94 @@
+<div class="permissionDistr--header">
+  <label>
+    员工姓名:
+    <input nz-input placeholder="姓名和账号" [(ngModel)]="employeesName" class="employeesName" (keydown.enter)="search()">
+  </label>
+  <label>
+    在职状态
+    <nz-select style="width: 120px;" [(ngModel)]="status">
+      <nz-option nzValue="0" nzLabel="在职"></nz-option>
+      <nz-option nzValue="1" nzLabel="删除"></nz-option>
+      <nz-option nzValue="2" nzLabel="离职"></nz-option>
+      <nz-option nzValue="3" nzLabel="冻结"></nz-option>
+    </nz-select>
+  </label>
+  <button class="search" (click)="search()">搜索</button>
+</div>
+
+<div class="permissionDistr--content">
+  <div class="leftTree">
+    <h4>请选择部门</h4>
+    <nz-tree  #nzTree [(ngModel)]="enterPiseList" [nzDefaultExpandAll]="false" [nzCheckable]="true" [nzCheckStrictly]="true" (nzCheckBoxChange)="mouseAction('check',$event)">
+    </nz-tree>
+  </div>
+  <div class="rightTable">
+    <nz-table #nzTable [nzData]="permissionList" [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>
+            <label nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()" [nzIndeterminate]="indeterminate"></label>&nbsp;&nbsp;账号名称</th>
+          <th>使用者</th>
+          <th>部门</th>
+          <th>岗位</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let em of permissionList">
+          <td>
+            <label nz-checkbox [nzValue]="em.userCode" [(ngModel)]="allChecked" (ngModelChange)="handleMulChoose(em.userCode)">{{em.loginCode}}</label>
+          </td>
+          <td>{{em.userName}}</td>
+          <td>{{em.officeName}}</td>
+          <td>{{em.postName}}</td>
+          <td>{{statusList[em.status]}}</td>
+          <td>
+            <nz-popconfirm [nzPlacement]="'bottom'">
+              <span class="blue" nz-popconfirm (click)="getRoleList(em.userCode)" *appAuthDirective="'qxgl:edit'">权限设置</span>
+              <ng-template #nzTemplate>
+                <div class="totip">
+                  <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="handelCheckbox($event)">
+                    <div nz-row>
+                      <div nz-col  *ngFor="let ro of roleList">
+                        <label nz-checkbox [nzValue]="ro.roleCode" [(ngModel)]="ro.check">{{ro.roleName}}</label>
+                      </div>
+                    </div>
+                  </nz-checkbox-wrapper>
+                  <div class="totipForm--footer">
+                    <button type="reset" class="cancel">取消</button>
+                    <button class="confirm" (click)="saveSingleUserRole(em.userCode)">确定</button>
+                  </div>
+                </div>
+              </ng-template>
+            </nz-popconfirm>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<!--页脚开始-->
+<div class="permissionDistr--footer">
+  <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+  <ng-template #totalTemplate let-total>
+    共 {{total}} 条
+  </ng-template>
+  <nz-popconfirm [nzPlacement]="'bottom'">
+    <button class="blue" nz-popconfirm (click)="getRoleList()" *appAuthDirective="'qxgl:edit'">批量权限设置</button>
+    <ng-template #nzTemplate>
+      <div class="totip">
+        <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="handelCheckbox($event)">
+          <div nz-col *ngFor="let ro of roleList">
+            <label nz-checkbox [nzValue]="ro.roleCode"  >{{ro.roleName}}</label>
+          </div>
+        </nz-checkbox-wrapper>
+        <div class="totipForm--footer">
+          <button type="reset" class="cancel">取消</button>
+          <button class="confirm" (click)="saveUserRole()">确定</button>
+        </div>
+      </div>
+    </ng-template>
+  </nz-popconfirm>
+</div>

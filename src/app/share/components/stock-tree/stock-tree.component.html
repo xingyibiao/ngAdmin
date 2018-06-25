@@ -1,0 +1,19 @@
+<div class="totip--header">
+  <input type="text" nz-input placeholder="仓库名称" [(ngModel)]="stockName" [ngModelOptions]="{ standalone: true }">
+  <button (click)="searchWarehouse()" class="serchBtn">搜索</button>
+</div>
+<div class="totip--content">
+  <div class="warehouse">
+    <nz-radio-group [(ngModel)]="radioValue" (ngModelChange)="radioChange(item)" *ngFor="let item of warehouseList">
+      <div class="warehouse--item">
+        <label nz-radio [nzValue]="item.id">{{item.warehouseName}}</label>
+      </div>
+    </nz-radio-group>
+  </div>
+</div>
+<div class="toptip--footer">
+  <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+  <ng-template #totalTemplate let-total>
+    共 {{total}} 条
+  </ng-template>
+</div>

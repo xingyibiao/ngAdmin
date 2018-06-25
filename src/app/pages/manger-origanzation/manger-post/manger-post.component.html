@@ -1,0 +1,100 @@
+<div class="mangerPost--header">
+  <label>
+    <span>岗位名称：</span>
+    <input nz-input placeholder="请输入岗位名称" class="postName" [(ngModel)]="postName" (keydown.enter)="search()">
+  </label>
+  <button (click)="search()">搜索</button>
+</div>
+<div class="mangerPost--content">
+  <nz-table #nzTable [nzData]="postList" [nzShowPagination]="false" [nzPageSize]="10" [nzScroll]="{x:'1300px'}">
+    <thead>
+      <tr>
+        <th>岗位名称</th>
+        <th>岗位描述</th>
+        <th>添加日期</th>
+        <th nzWidth="108px" nzRight="0px">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data">
+        <td>{{data.postName}}</td>
+        <td>{{data.remarks}}</td>
+        <td>{{data.createDate}}</td>
+        <td nzRight="0px" nzWidth="108px" class="opreta">
+          <nz-popconfirm
+            [nzPlacement]="'left'">
+            <span class="blue" nz-popconfirm (click)="selectPost(data.postCode)" *appAuthDirective="'gwgl:edit'">编辑</span>
+            <ng-template #nzTemplate>
+              <div class="totip">
+                  <form nz-form [formGroup]="postForm" (ngSubmit)="save()" nzLayout="vertical">
+                    <nz-form-item>
+                      <nz-form-label [nzXs]="24" nzRequired nzFor="postName">岗位名称</nz-form-label>
+                      <nz-form-control [nzXs]="24">
+                        <input nz-input formControlName="postName" id="postName">
+                        <nz-form-explain *ngIf="postForm.get('postName').dirty && postForm.get('postName').errors">请输入岗位名称</nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                      <nz-form-label [nzXs]="24" nzRequired nzFor="postRemarks">岗位描述</nz-form-label>
+                      <nz-form-control [nzXs]="24">
+                        <textarea nz-input formControlName="postRemarks" id="postRemarks"></textarea>
+                        <!-- {{[postForm.get('postRemarks').errors | json]}} -->
+                        <nz-form-explain *ngIf="postForm.get('postRemarks').dirty && postForm.get('postRemarks').hasError('required')">请输入岗位描述</nz-form-explain>
+                        <nz-form-explain 
+                          *ngIf="postForm.get('postRemarks').dirty &&
+                          postForm.get('postRemarks').hasError('maxlength')">岗位描述最长输入500个字符，已输入{{postForm.get('postRemarks').getError('maxlength')['actualLength']}}个字符</nz-form-explain>
+                      </nz-form-control>
+                    </nz-form-item>
+                    <div class="totipForm--footer">
+                      <button type="reset" class="cancel">取消</button>
+                      <button type="submit" class="confirm">确定</button>
+                    </div>
+                  </form>
+              </div>
+            </ng-template>
+          </nz-popconfirm>
+          <span class="error" (click)="deletePost(data.postCode)" *appAuthDirective="'gwgl:del'">删除</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<div class="mangerPost--footer">
+    <nz-pagination
+      [nzPageIndex]="pageNo"
+      [nzTotal]="totals"
+      [nzPageSize]="10"
+      [nzShowTotal]="totalTemplate"
+      (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      共 {{totals}} 条
+    </ng-template>
+    <nz-popconfirm
+      [nzPlacement]="'topRight'">
+      <button nz-popconfirm (click)="selectPost()" *appAuthDirective="'gwgl:add'">新增岗位</button>
+      <ng-template #nzTemplate>
+        <div class="totip">
+            <form nz-form [formGroup]="postForm" (ngSubmit)="save()" nzLayout="vertical">
+              <nz-form-item>
+                <nz-form-label [nzXs]="24" nzRequired nzFor="postName">岗位名称</nz-form-label>
+                <nz-form-control [nzXs]="24">
+                  <input nz-input formControlName="postName" id="postName">
+                  <nz-form-explain *ngIf="postForm.get('postName').dirty && postForm.get('postName').errors">请输入岗位名称</nz-form-explain>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzXs]="24" nzRequired nzFor="postRemarks">岗位描述</nz-form-label>
+                <nz-form-control [nzXs]="24">
+                  <textarea nz-input formControlName="postRemarks" id="postRemarks"></textarea>
+                  <nz-form-explain *ngIf="postForm.get('postRemarks').dirty && postForm.get('postRemarks').errors">请输入岗位描述</nz-form-explain>
+                </nz-form-control>
+              </nz-form-item>
+              <div class="totipForm--footer">
+                <button type="reset" class="cancel">取消</button>
+                <button type="submit" class="confirm">确定</button>
+              </div>
+            </form>
+        </div>
+      </ng-template>
+    </nz-popconfirm>
+</div>

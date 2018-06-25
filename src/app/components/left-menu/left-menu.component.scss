@@ -1,0 +1,14 @@
+.leftMenu{
+  width: 240px;
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  overflow: hidden;
+  background-color: #fff;
+  .collapsedBtn{
+    position: absolute;
+    border: none;
+    bottom: 0;
+    right: 0;
+  }
+}

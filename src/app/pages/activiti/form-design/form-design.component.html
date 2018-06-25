@@ -1,0 +1,23 @@
+<div class="form--design">
+  <!-- header 开始 -->
+  <div class="form--design__header">
+    <div class="header--content">
+      <div class="header--content__item left">表单设计</div>
+      <div class="header--content__item right"><img src="assets/save.png" />保存</div>
+    </div>
+  </div>
+  <!-- header 结束 -->
+
+  <!-- 正文开始 -->
+  <div class="form--design__main">
+    <!-- 左侧控件区开始 -->
+    <div class="controls">
+      <div class="control--item" *ngFor="let icon of leftControls; let i = index">
+        <img [src]="icon.icon">
+        <span>{{icon.name}}</span>
+      </div>
+    </div>
+    <!-- 左侧控件区结束 -->
+  </div>
+  <!-- 正文结束 -->
+</div>

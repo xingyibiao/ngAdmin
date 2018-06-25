@@ -1,0 +1,57 @@
+@import '../../../utils/var.scss';
+.login{
+  width: 100%;
+  min-width: 940px;
+  height: 900px;
+  margin: 0 auto;
+  background-image: url('../../../assets/loginBg.png');
+  .loginForm{
+    width: 340px;
+    margin: 0 auto;
+    padding-top: 270px;
+    .loginForm--header__title{
+      font-size: 33px;
+      text-align: center;
+      color: #333;
+      img{
+        vertical-align: baseline;
+        margin-right: 4px;
+      }
+    }
+    .loginForm--header__subTitle{
+      font-size: 14px;
+      color: #999;
+      text-align: center;
+      margin: 20px 0 30px;
+    }
+    .loginForm--item{
+      display: block;
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 3px;
+      padding: 14px 18px;
+      .title{
+        border-right: 1px solid #d5d5d5;
+        padding-right: 23px;
+        margin-right: 23px;
+      }
+      input{
+        border: none;
+      }
+    }
+    .loginSubmit{
+      width: 340px;
+      height: 45px;
+      margin-top: 10px;
+      font-size: 18px;
+      color: #fff;
+      line-height: 45px;
+      text-align: center;
+      background-color: #3386fe;
+      &[disabled]{
+        background-color: #d9d9d9;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+@import '../../../../utils/var.scss';
+.totip {
+  .totip--footer{
+  text-align: right;
+  margin-top: 60px;
+  button{
+    margin: 2px;
+    padding: 5px 16px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: none;
+    border: 1px solid #d9d9d9;
+    &.confirm{
+      color: $blue;    
+    }
+   }
+  }
+}
+.footer{
+  text-align: center;
+  padding: 18px;
+  .operationBtnGroup{
+    float: right;
+    margin-top: -30px;
+    .operationBtn{
+        margin-right: 15px;
+        font-size: 12px;
+        color: #fff;
+        background-color: #1164c8;
+        padding: 5px 10px;
+        border-radius: 100px;
+   }
+ }
+}
+.storageOutbound{
+  .storageOutbound--title{
+     font-size: 16px;
+     border-bottom: 1px solid #e9eff8;
+     margin-bottom: 20px;
+     padding-bottom: 4px;
+  }
+  .storageOutbound--footer{
+    text-align: right;
+    margin-top: 20px;
+    button{
+     margin: 0px 10px;
+      color:#1164c8;
+      background:#ffffff;
+      border: 1px solid #dfdfdf;
+      border-radius:3px;
+      padding: 4px 8px;
+    }
+   .title{
+    font-size: 16px;
+    border-bottom: 1px solid #e9eff8;
+    .searchTxt{
+      width: 200px;
+    }
+   }
+  }
+  .storageOutbound--btnGroup{
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 0px 0px 0px;
+    text-align: right;
+    border-radius: 0 0 4px 4px;
+    text-align: right;
+    margin:20px -24px 0px -24px;
+    button{
+      margin-right:20px;
+    }
+  }
+}
+.serchBtn{
+  font-size: 14px;
+  padding: 6px 14px;
+  color: #fff;
+  border-radius: 3px;
+  background-color: #1164c8;
+}
+
+.edit{
+  cursor: pointer;
+  color: #1164c8;
+  margin-right: 6px;
+}
+
+.del{
+  cursor: pointer;
+  color: #fa5555;
+  margin-left: 6px;
+}
+
+.cancel{
+  font-size: 14px;
+  color: $black;
+  padding: 5px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.save{
+  font-size: 14px;
+  color: $blue;
+  padding: 5px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+

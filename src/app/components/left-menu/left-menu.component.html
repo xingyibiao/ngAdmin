@@ -1,0 +1,38 @@
+<div class="leftMenu">
+  <ul nz-menu [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+    <li nz-submenu *ngFor="let firstMenu of menus" [hidden]="menus.length === 0">
+      <span title>
+        <i class="anticon anticon-appstore"></i>
+        <span>{{firstMenu.menuName}}</span>
+      </span>
+      <ul *ngFor="let secondMenu of firstMenu.children">
+        <li nz-menu-item [hidden]="firstMenu.children.length === 0" [routerLink]="['/' + secondMenu.menuPinyin]">
+          <span title>{{secondMenu.menuName}}</span>
+          <!-- <ul *ngFor="let thirdMenu of secondMenu.children" [hidden]="secondMenu.children === 0">
+              <li nz-menu-item [routerLink]="['/' + thirdMenu.menuPinyin]">{{thirdMenu.menuName}}</li>
+            </ul> -->
+        </li>
+
+      </ul>
+    </li>
+    <li nz-submenu>
+      <span title>
+        <i class="anticon anticon-appstore"></i>
+        <span>仓库管理</span>
+      </span>
+      <ul>
+        <li nz-menu-item [routerLink]="'/' + 'ckgl'">
+          <span class="title">仓库管理</span>
+        </li>
+        <li nz-menu-item [routerLink]="'/' + 'chgl'">
+          <span class="title">存货管理</span>
+        </li>
+      </ul>
+    </li>
+
+  </ul>
+  <button nz-button (click)="toggleCollapsed()" style="margin-bottom: 10px;" class="collapsedBtn" [style.left]="isCollapsed ? '30px' : '200px'">
+    <i class="anticon" [class.anticon-menu-unfold]="isCollapsed" [class.anticon-menu-fold]="!isCollapsed">
+    </i>
+  </button>
+</div>

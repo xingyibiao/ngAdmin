@@ -1,0 +1,98 @@
+<div class="mangerRole--header">
+  <label>
+    子公司名称：
+    <input nz-input placeholder="请输入子公司名称" [(ngModel)]="roleName" class="roleName" (keydown.enter)="search()">
+  </label>
+  <button class="search" (click)="search()">搜索</button>
+</div>
+
+<div class="mangerRole--content">
+  <nz-table #nzTable [nzData]="mangerRoleList" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th nzWidth="30%">角色名称</th>
+        <th>权限分配</th>
+        <th>添加日期</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of nzTable.data">
+        <td>{{role.roleName}}</td>
+        <td>
+          <!--
+             nzCheckable 节点前添加 Checkbox 复选框
+             nzCheckStrictly checkable状态下节点选择完全受控（父子节点选中状态不再关联）
+             nzCheckBoxChange  点击树节点触发
+          -->
+          <nz-popconfirm [nzPlacement]="'bottom'">
+            <span class="blue" nz-popconfirm (click)="getRoleMenu(role.roleCode)" *appAuthDirective="'jsgl:edit'">编辑</span>
+            <ng-template #nzTemplate>
+              <div class="totip">
+                <nz-tree #nzTree [(ngModel)]="menuRoleList" [nzCheckable]="true" [nzCheckStrictly]="false" 
+                 [nzDefaultExpandAll]="false"    (nzCheckBoxChange)="mouseAction('check',$event)" >
+                 </nz-tree>
+                <div class="totipForm--footer">
+                    <button type="reset" class="cancel">取消</button>
+                    <button  class="confirm" (click)="saveRoleMenu(role.roleCode)">确定</button>
+                  </div>
+              </div>
+            </ng-template>
+          </nz-popconfirm>
+        </td>
+        <td>{{role.createDate}}</td>
+        <td nzWidth="108px" nzRight="0px">
+          <nz-popconfirm [nzPlacement]="'left'">
+            <span class="blue" nz-popconfirm (click)="addEditRole(role.roleCode)" *appAuthDirective="'jsgl:edit'">编辑</span>
+            <ng-template #nzTemplate>
+              <div class="totip">
+                <form nz-form [formGroup]="postForm" (ngSubmit)="save()" nzLayout="vertical">
+                  <nz-form-item>
+                    <nz-form-label [nzXs]="24" nzRequired nzFor="roleName">子公司名称</nz-form-label>
+                    <nz-form-control [nzXs]="24">
+                      <input nz-input formControlName="roleName" id="roleName">
+                      <nz-form-explain *ngIf="postForm.get('roleName').dirty && postForm.get('roleName').errors">请输入子公司名称</nz-form-explain>
+                    </nz-form-control>
+                  </nz-form-item>
+                  <div class="totipForm--footer">
+                    <button type="reset" class="cancel">取消</button>
+                    <button type="submit" class="confirm">确定</button>
+                  </div>
+                </form>
+              </div>
+            </ng-template>
+          </nz-popconfirm>
+          <span class="error" (click)="delRole(role.roleCode)" *appAuthDirective="'jsgl:del'">删除</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<!-- 页脚开始 -->
+<div class="mangerRole--footer">
+  <nz-pagination [nzPageIndex]="pageNo" [nzTotal]="total" [nzPageSize]="10" [nzShowTotal]="totalTemplate" (nzPageIndexChange)="pageChange($event)"></nz-pagination>
+  <ng-template #totalTemplate let-total>
+    共 {{total}} 条
+  </ng-template>
+  <nz-popconfirm [nzPlacement]="'topRight'">
+    <button nz-popconfirm (click)="addEditRole()" *appAuthDirective="'jsgl:add'">新增角色</button>
+    <ng-template #nzTemplate>
+      <div class="totip">
+        <form nz-form [formGroup]="postForm" (ngSubmit)="save()" nzLayout="vertical">
+          <nz-form-item>
+            <nz-form-label [nzXs]="24" nzRequired nzFor="roleName">子公司名称</nz-form-label>
+            <nz-form-control [nzXs]="24">
+              <input nz-input formControlName="roleName" id="roleName">
+              <nz-form-explain *ngIf="postForm.get('roleName').dirty && postForm.get('roleName').errors">请输入子公司名称</nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <div class="totipForm--footer">
+            <button type="reset" class="cancel">取消</button>
+            <button type="submit" class="confirm">确定</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+  </nz-popconfirm>
+  </div>
